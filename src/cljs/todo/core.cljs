@@ -91,8 +91,11 @@
       (map-indexed
        (fn [index {:keys [done? content]}]
          [:li
-          {:key (str "todo-" index)}
-          (str done? " ") content])
+          {:key index}
+          [:input {:type "checkbox"
+                   :value done?
+                   :on-click #(bonsai/next! state! toggle-todo-done index)}]
+          content])
        todos))]))
 
 (defn root
