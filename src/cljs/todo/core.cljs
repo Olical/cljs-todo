@@ -108,7 +108,9 @@
   [:div
    [:div
     [:button {:on-click #(bonsai/next! state! toggle-all-todos-done)}
-     "toggle all"]]
+     "toggle all"]
+    [:button {:on-click #(bonsai/next! state! delete-all-done-todos)}
+     "delete done"]]
    [todo-editor]
    [todo-list]])
 
