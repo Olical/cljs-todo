@@ -96,16 +96,37 @@
           {:key index}
           [:input {:type "checkbox"
                    :checked done?
-                   :on-change #(bonsai/next! state! toggle-todo-done index)}]
-          content
+                   :on-change #(bonsai/next! state! toggle-todo-done index)
+                   :id index}]
+          [:label
+           {:for index}
+           content]
           [:button {:on-click #(bonsai/next! state! delete-todo index)}
            "delete"]])
        todos))]))
+
+(defn filter-mode
+  "Displays the filter mode and allows you to change it."
+  []
+  (let [state @state!
+        current-mode (:filter-mode state)]
+    [:ul
+     (doall
+      (for [mode [:all :active :completed]]
+        [:li
+         {:key mode}
+         [:input {:type "radio"
+                  :checked (= mode current-mode)
+                  :on-change #(bonsai/next! state! change-filter-mode mode)
+                  :id mode}]
+         [:label {:for mode}
+          (name mode)]]))]))
 
 (defn root
   "The root component for the application, binds everything together."
   []
   [:div
+   [filter-mode]
    [:div
     [:button {:on-click #(bonsai/next! state! toggle-all-todos-done)}
      "toggle all"]
