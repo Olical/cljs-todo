@@ -69,11 +69,13 @@
    :filter-mode :all
    :draft-todo-content ""})
 
+(defonce state! (reagent/atom (initial-state)))
+
 ;; Views.
 
 (defn todo-editor
   "Allows you to create todos."
-  [state!]
+  []
   (let [{:keys [draft-todo-content]} @state!]
     [:input {:type "text"
              :value draft-todo-content
@@ -83,7 +85,7 @@
 
 (defn todo-list
   "Renders the list of todos."
-  [state!]
+  []
   (let [state @state!
         todos (filtered-todos state)]
     [:ul
@@ -93,8 +95,8 @@
          [:li
           {:key index}
           [:input {:type "checkbox"
-                   :value done?
-                   :on-click #(bonsai/next! state! toggle-todo-done index)}]
+                   :checked done?
+                   :on-change #(bonsai/next! state! toggle-todo-done index)}]
           content
           [:button {:on-click #(bonsai/next! state! delete-todo index)}
            "delete"]])
@@ -102,12 +104,15 @@
 
 (defn root
   "The root component for the application, binds everything together."
-  [state!]
+  []
   [:div
-   [todo-editor state!]
-   [todo-list state!]])
+   [:div
+    [:button {:on-click #(bonsai/next! state! toggle-all-todos-done)}
+     "toggle all"]]
+   [todo-editor]
+   [todo-list]])
 
 (defn init!
   "Entry point for the application, mounts the root into the DOM."
   []
-  (reagent/render [root (reagent/atom (initial-state))] (.getElementById js/document "app")))
+  (reagent/render [root] (.getElementById js/document "app")))
