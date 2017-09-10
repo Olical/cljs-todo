@@ -95,7 +95,9 @@
           [:input {:type "checkbox"
                    :value done?
                    :on-click #(bonsai/next! state! toggle-todo-done index)}]
-          content])
+          content
+          [:button {:on-click #(bonsai/next! state! delete-todo index)}
+           "delete"]])
        todos))]))
 
 (defn root
